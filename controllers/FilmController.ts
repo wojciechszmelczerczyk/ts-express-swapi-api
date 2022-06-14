@@ -17,7 +17,6 @@ export const getFilms = async (req: Request, res: Response) => {
     // destucture info about movies
     const { results } = data;
 
-    // filter needed film data [{all properties}, {all properties}, ...] => [{url, title, release_date}, {url, title, release_date}, ...]
     const films = _.map(results, (film) => {
       return _.chain(film)
         .update("url", extractIdFromURL)
