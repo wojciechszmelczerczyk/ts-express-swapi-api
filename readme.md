@@ -22,6 +22,8 @@ Simple movies middleware
 - `Express`
 - `PostgreSQL`
 - `Prisma`
+- `Jest`
+- `Supertest`
 
 ## Preqrequisities
 
