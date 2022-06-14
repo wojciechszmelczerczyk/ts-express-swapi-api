@@ -10,6 +10,7 @@ Simple movies middleware
 - [Preqrequisities](#preqrequisities)
 - [To run](#to-run)
 - [Env setup](#env-setup)
+- [API](#api)
 
 ## Techstack
 
@@ -60,3 +61,11 @@ PORT=3000
 
 BASE_FILMS_API=https://swapi.dev/api/films
 ```
+
+## API
+
+| Endpoint | Method | Action           |
+| :------- | :----: | :--------------- |
+| `/films` |  GET   | Get all movies\* |
+
+\* you can provide `id` parameter like so `/films/2` in order to get info about specific film.
