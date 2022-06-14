@@ -24,10 +24,6 @@ export const getFilms = async (req: Request, res: Response) => {
         .pick("url", "title", "release_date");
     });
 
-    _.mapKeys(films, function (value, key) {
-      return;
-    });
-
     res.json(films);
 
     // otherwise get film by id

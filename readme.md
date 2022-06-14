@@ -59,7 +59,7 @@ DB_URL=your-postgres-url
 
 PORT=3000
 
-BASE_FILMS_API=https://swapi.dev/api/films
+BASE_FILMS_URL=https://swapi.dev/api/films
 ```
 
 ## API
