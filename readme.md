@@ -102,7 +102,7 @@ test("when id is not provided return all films", async () => {
 
 ### Integration
 
-`GET /films/id?`
+`GET /films`
 
 <details>
 <summary>when id is not provided return all films</summary>
@@ -118,8 +118,10 @@ test("when id is not provided return all films", async () => {
 
 </details>
 
+`GET /films/id`
+
 <details>
-<summary>when id is provided return specific film</summary>
+<summary>when provided id is valid return specific film</summary>
 
 ```javascript
 test("when id is provided return specific film", async () => {
@@ -128,6 +130,36 @@ test("when id is provided return specific film", async () => {
 
   expect(res.status).toBe(200);
   expect(res.body).toBeTruthy();
+});
+```
+
+</details>
+
+<details>
+<summary>when provided id is not a numeric value, return error message</summary>
+
+```javascript
+test("when provided id is not a numeric value, return error message", async () => {
+  const id = "id";
+  const res = await request(app).get(`/films/${id}`);
+
+  expect(res.status).toBe(404);
+  expect(res.body.err).toBe("id has to be number");
+});
+```
+
+</details>
+
+<details>
+<summary>when film with provided id doesn't exist, return error message</summary>
+
+```javascript
+test("when film with provided id doesn't exist, return error message", async () => {
+  const id = 7;
+  const res = await request(app).get(`/films/${id}`);
+
+  expect(res.status).toBe(404);
+  expect(res.body.err).toBe("film with this id doesn't exist");
 });
 ```
 
