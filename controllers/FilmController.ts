@@ -12,6 +12,7 @@ import {
   updateFilmService,
   findFilmListService,
   getFilmByIdService,
+  getAllListsService,
 } from "../services/FilmService";
 import axios from "axios";
 
@@ -135,4 +136,14 @@ export const addFilm = async (req: Request, res: Response) => {
       err: err.message,
     });
   }
+};
+
+export const getAllLists = async (req: Request, res: Response) => {
+  // intercept name from query string
+  const { name } = req.query;
+
+  // pass qs as an argument, if qs is undefined, get all lists
+  const list = await getAllListsService(name);
+
+  res.json(list);
 };

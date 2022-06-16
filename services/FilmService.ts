@@ -2,7 +2,7 @@ import { config } from "dotenv";
 import axios from "axios";
 import prisma from "../prisma/client";
 import { ObjectChain } from "lodash";
-
+import { ParsedQs } from "qs";
 config();
 
 type Film = {
@@ -18,6 +18,8 @@ type FilmList = {
 };
 
 type properties = "title" | "release_date" | "characters";
+
+type queryType = string | string[] | ParsedQs | ParsedQs[] | undefined;
 
 export const getFilmsService = async () =>
   await axios.get(`${process.env.BASE_FILMS_URL}`);
@@ -61,6 +63,18 @@ export const findFilmListService = async (
   return await prisma.filmList.findUnique({
     where: {
       name: name,
+    },
+  });
+};
+
+export const getAllListsService = async (name: queryType) => {
+  // if query
+  if (name === undefined) {
+    return await prisma.filmList.findMany();
+  }
+  return await prisma.filmList.findUnique({
+    where: {
+      name: name as string,
     },
   });
 };

@@ -75,6 +75,7 @@ BASE_FILMS_URL=https://swapi.dev/api/films
 | `/films`     |  GET   | Get all films                  |
 | `/films/:id` |  GET   | Get single film                |
 | `/favorites` |  POST  | Add film to created list in db |
+| `/favorites` |  GET   | Get list of all lists from db  |
 
 ## Tests
 
@@ -367,6 +368,37 @@ test("when added film with provided id already exist in list, return duplicate e
   expect(res.body.err).toBe(
     "film duplication error. Film with this id already exist in list"
   );
+});
+```
+
+</details>
+
+<br/>
+
+`GET /favorites`
+
+<details>
+<summary>when no query name is provided, return all lists</summary>
+
+```javascript
+test("when no query name is provided, return all lists", async () => {
+  const res = await request(app).get("/favorites");
+
+  expect(res.body.length).toBe(2);
+});
+```
+
+</details>
+
+<details>
+<summary>when query name is provided, return list by name</summary>
+
+```javascript
+test("when query name is provided, return list by name", async () => {
+  const name = "New Saga";
+  const res = await request(app).get("/favorites").query({ name });
+
+  expect(res.body.name).toBe(name);
 });
 ```
 

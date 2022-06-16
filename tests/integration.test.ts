@@ -8,10 +8,8 @@ beforeAll(async () => {
   // run express server
   app = server();
 
-  // db name
   let name = "Old Saga";
 
-  // create Old Saga db
   await createDB(name);
 });
 
@@ -25,7 +23,7 @@ describe("GET /films", () => {
     const res = await request(app).get("/films");
 
     expect(res.status).toBe(200);
-    expect(res.body).toBeTruthy();
+    expect(res.body.length).toBe(6);
   });
 });
 
@@ -35,7 +33,8 @@ describe("GET /films/:id", () => {
     const res = await request(app).get(`/films/${id}`);
 
     expect(res.status).toBe(200);
-    expect(res.body).toBeTruthy();
+
+    expect(res.body.title).toBe("The Empire Strikes Back");
   });
 
   test("when provided id is not a numeric value, return error message", async () => {
@@ -65,7 +64,7 @@ describe("POST /favorites", () => {
       .post("/favorites")
       .send({ id, name: listName });
 
-    expect(res).toBeTruthy();
+    expect(res.body).toBeTruthy();
   });
 
   test("when list with provided name doesn't exist and film id is correct, create new list and add film with provided id to it", async () => {
@@ -116,5 +115,20 @@ describe("POST /favorites", () => {
     expect(res.body.err).toBe(
       "film duplication error. Film with this id already exist in list"
     );
+  });
+});
+
+describe("GET /favorites", () => {
+  test("when no query name is provided, return all lists", async () => {
+    const res = await request(app).get("/favorites");
+
+    expect(res.body.length).toBe(2);
+  });
+
+  test("when query name is provided, return list by name", async () => {
+    const name = "New Saga";
+    const res = await request(app).get("/favorites").query({ name });
+
+    expect(res.body.name).toBe(name);
   });
 });
