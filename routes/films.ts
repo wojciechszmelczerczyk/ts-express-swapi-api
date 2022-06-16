@@ -1,9 +1,11 @@
 import { Router } from "express";
-import { getFilms, addFilm } from "../controllers/FilmController";
+import { getFilms, getFilmById, addFilm } from "../controllers/FilmController";
 
 const router = Router();
 
-router.get("/films/:id?", getFilms);
+router.get("/films", getFilms);
+
+router.get("/films/:id", getFilmById);
 
 router.post("/favorites", addFilm);
 

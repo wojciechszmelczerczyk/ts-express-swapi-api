@@ -11,6 +11,8 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --watchAll",
+    "test-unit": "jest --watchAll unit.test.ts",
+    "test-api": "jest --watchAll integration.test.ts",
     "start": "nodemon index.ts"
   },
   "author": "Wojciech Szmelczerczyk <szmelczerczykwojciech@gmail.com>",

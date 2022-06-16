@@ -11,49 +11,60 @@ import {
   addFilmService,
   updateFilmService,
   findFilmListService,
+  getFilmByIdService,
 } from "../services/FilmService";
 import axios from "axios";
 
 export const getFilms = async (req: Request, res: Response) => {
-  // catch id parameter
-  const id = req.params.id ? req.params.id : undefined;
-
   try {
-    if (id !== undefined) {
-      // if id is not a numeric value, throw an error
-      if (isNaN(parseInt(id))) throw new Error("id has to be number");
+    // fetch all films from swapi third party api
+    const { data } = await getFilmsService();
 
-      // otherwise get data about specific movie
-      const { data } = await getFilmsService(id);
+    // destucture info about movies
+    const { results } = data;
 
-      // validate json schema structure
-      if (!validateFilm(data)) throw new Error("JSON schema is not valid");
+    // use ajv to validate json schema
+    if (!validateFilms(results)) throw new Error("JSON schema is not valid");
 
-      // filter needed film data, update name of url property with id
-      const film = chain(data)
-        .pick("url", "title", "release_date")
-        .update("url", extractIdFromURL);
+    // pick needed properties from film, use helper function in order to extract url like so "https:swapi.dev/api/characters/2" => "2"
+    const films = map(results, (film) => {
+      return chain(film)
+        .update("url", extractIdFromURL)
+        .pick("url", "title", "release_date");
+    });
 
-      res.status(200).json(film);
+    // send processed list of all films
+    res.status(200).json(films);
+  } catch (err) {
+    if (err.message.includes("404"))
+      err.message = "film with this id doesn't exist";
+    return res.status(404).json({
+      fail: true,
+      err: err.message,
+    });
+  }
+};
 
-      // if no id is provided get all films
-    } else if (id === undefined) {
-      // get data about all movies
-      const { data } = await getFilmsService();
+export const getFilmById = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
 
-      // destucture info about movies
-      const { results } = data;
+    // if id is not a numeric value, throw an error
+    if (isNaN(parseInt(id))) throw new Error("id has to be number");
 
-      if (!validateFilms(results)) throw new Error("JSON schema is not valid");
+    // otherwise get data about specific movie
+    const { data } = await getFilmByIdService(id);
 
-      const films = map(results, (film) => {
-        return chain(film)
-          .update("url", extractIdFromURL)
-          .pick("url", "title", "release_date");
-      });
+    // validate json schema structure
+    if (!validateFilm(data)) throw new Error("JSON schema is not valid");
 
-      res.status(200).json(films);
-    }
+    // filter needed film data TODO: change property name from url to id
+    const film = chain(data)
+      .pick("url", "title", "release_date")
+      .update("url", extractIdFromURL);
+
+    // return single film
+    res.status(200).json(film);
   } catch (err) {
     if (err.message.includes("404"))
       err.message = "film with this id doesn't exist";
@@ -66,18 +77,19 @@ export const getFilms = async (req: Request, res: Response) => {
 
 export const addFilm = async (req: Request, res: Response) => {
   try {
-    // selected film id, name for new list
+    // id of film, list name
     const { id, name } = req.body;
 
+    // if provided id is not numeric, throw error
     if (isNaN(parseInt(id))) throw new Error("id has to be number");
 
     // get film by id
-    const { data } = await getFilmsService(id);
+    const { data } = await getFilmByIdService(id);
 
     // validate json schema structure
     if (!validateFilm(data)) throw new Error("JSON schema is not valid");
 
-    // get all characters from film
+    // get all character urls from film
     const characterUrls = data.characters;
 
     // get all characters names
@@ -88,26 +100,36 @@ export const addFilm = async (req: Request, res: Response) => {
       })
     );
 
-    // filter needed film data, update name of url property with id
+    // filter needed film data, exchange characters array of urls with actual character names
     const film = chain(data)
       .pick("title", "release_date", "characters")
       .set("characters", characters);
 
     // check if list with provided name already exists
     const list = await findFilmListService(name);
-    console.log(list);
+
     // if not create new list
     if (list === null) {
+      // create new list in db, add film to it
       const filmList = await addFilmService(name, film);
-      // otherwise add film to existing list
+
+      // return list and film which was added to list
       res.json({ filmList, film });
+
+      // otherwise add film to existing list
     } else {
+      // update list with new film
       const filmList = await updateFilmService(name, film);
+
+      // return list and film which was added to list
       res.json({ filmList, film });
     }
   } catch (err) {
     if (err.message.includes("404"))
       err.message = "film with this id doesn't exist";
+    else if (err.message.includes("Unique constraint failed"))
+      err.message =
+        "film duplication error. Film with this id already exist in list";
     return res.status(404).json({
       fail: true,
       err: err.message,

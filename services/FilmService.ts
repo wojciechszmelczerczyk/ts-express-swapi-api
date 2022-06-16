@@ -19,11 +19,11 @@ type FilmList = {
 
 type properties = "title" | "release_date" | "characters";
 
-export const getFilmsService = async (id?: string) => {
-  if (id) return await axios.get(`${process.env.BASE_FILMS_URL}/${id}`);
+export const getFilmsService = async () =>
+  await axios.get(`${process.env.BASE_FILMS_URL}`);
 
-  return await axios.get(`${process.env.BASE_FILMS_URL}`);
-};
+export const getFilmByIdService = async (id: string) =>
+  await axios.get(`${process.env.BASE_FILMS_URL}/${id}`);
 
 export const addFilmService = async (
   name: string,

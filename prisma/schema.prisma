@@ -7,18 +7,19 @@ datasource db {
   url      = env("DB_URL")
 }
 
-
 model Film {
-  id Int @id @default(autoincrement())
-  title String @unique
+  id           Int      @id @default(autoincrement())
+  title        String
   release_date String
-  characters String[]
-  filmList FilmList @relation(fields: [listId], references: [id])
-  listId Int
+  characters   String[]
+  listId       Int
+  filmList     FilmList @relation(fields: [listId], references: [id])
+
+  @@unique([listId, title], map: "filmTitle")
 }
 
 model FilmList {
-  id    Int      @id @default(autoincrement())
-  name  String   @unique
+  id    Int    @id @default(autoincrement())
+  name  String @unique
   films Film[]
 }

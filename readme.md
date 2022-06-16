@@ -70,25 +70,66 @@ BASE_FILMS_URL=https://swapi.dev/api/films
 
 ## API
 
-| Endpoint      | Method | Action                                                    |
-| :------------ | :----: | :-------------------------------------------------------- |
-| `/films/:id?` |  GET   | Get all films, when parameter provided, get specific film |
-| `/favorites`  |  POST  | Add film to created list in db                            |
+| Endpoint     | Method | Action                         |
+| :----------- | :----: | :----------------------------- |
+| `/films`     |  GET   | Get all films                  |
+| `/films/:id` |  GET   | Get single film                |
+| `/favorites` |  POST  | Add film to created list in db |
 
 ## Tests
 
 ### To run:
 
+`Unit tests`
+
+```
+npm run test-unit
+```
+
+`Integration/API tests`
+
+```
+npm run test-api
+```
+
+`Both`
+
 ```
 npm run test
 ```
 
+### Hooks
+
+`Create new List table`
+
+Before tests one Film list table is created.
+
+```javascript
+export const createDB = async (name: string) =>
+  await prisma.filmList.create({
+    data: {
+      name,
+    },
+  });
+```
+
+`Flush all tables`
+
+After tests all tables are flushed.
+
+```javascript
+export const flushDBs = async () => {
+  await prisma.film.deleteMany({});
+  await prisma.filmList.deleteMany({});
+};
+```
+
 ### Unit
 
-`FilmService -> getFilms(id?)`
+`FilmService -> getFilms()`
 
 <details>
-<summary>when id is not provided return all films</summary>
+<summary>return all films</summary>
 
 ```javascript
 test("when id is not provided return all films", async () => {
@@ -98,6 +139,7 @@ test("when id is not provided return all films", async () => {
 ```
 
 </details>
+<br/>
 
 ### Integration
 
@@ -153,6 +195,7 @@ Response
 ```
 
 </details>
+<br/>
 
 `GET /films/id`
 
@@ -225,6 +268,106 @@ test("when film with provided id doesn't exist, return error message", async () 
     "fail": true,
     "err": "film with this id doesn't exist"
 }
+```
+
+</details>
+
+<br/>
+
+`POST /favorites`
+
+<details>
+<summary>when list with provided name exist and film id is correct, add film with provided id to list</summary>
+
+```javascript
+test("when list with provided name exist and film id is correct, add film with provided id to list", async () => {
+  let listName = "Old Saga";
+
+  let id = "2";
+
+  const res = await request(app)
+    .post("/favorites")
+    .send({ id, name: listName });
+
+  expect(res).toBeTruthy();
+});
+```
+
+</details>
+
+<details>
+<summary>when list with provided name doesn't exist and film id is correct, create new list and add film with provided id to it</summary>
+
+```javascript
+test("when list with provided name doesn't exist and film id is correct, create new list and add film with provided id to it", async () => {
+  let listName = "New Saga";
+
+  let id = "2";
+
+  const res = await request(app)
+    .post("/favorites")
+    .send({ id, name: listName });
+
+  expect(res).toBeTruthy();
+});
+```
+
+</details>
+<details>
+<summary>when film with provided id doesn't exist, return error</summary>
+
+```javascript
+test("when film with provided id doesn't exist, return error", async () => {
+  let listName = "New Saga";
+
+  let id = "7";
+
+  const res = await request(app)
+    .post("/favorites")
+    .send({ id, name: listName });
+
+  expect(res.body.err).toBe("film with this id doesn't exist");
+});
+```
+
+</details>
+
+<details>
+<summary>when provided id is not a numeric value, return error</summary>
+
+```javascript
+test("when provided id is not a numeric value, return error", async () => {
+  let listName = "New Saga";
+
+  let id = "ss";
+
+  const res = await request(app)
+    .post("/favorites")
+    .send({ id, name: listName });
+
+  expect(res.body.err).toBe("id has to be number");
+});
+```
+
+</details>
+
+<details>
+<summary>when added film with provided id already exist in list, return duplicate error</summary>
+
+```javascript
+test("when added film with provided id already exist in list, return duplicate error", async () => {
+  let listName = "New Saga";
+
+  let id = "2";
+
+  const res = await request(app)
+    .post("/favorites")
+    .send({ id, name: listName });
+
+  expect(res.body.err).toBe(
+    "film duplication error. Film with this id already exist in list"
+  );
+});
 ```
 
 </details>
