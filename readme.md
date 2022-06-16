@@ -70,11 +70,10 @@ BASE_FILMS_URL=https://swapi.dev/api/films
 
 ## API
 
-| Endpoint | Method | Action           |
-| :------- | :----: | :--------------- |
-| `/films` |  GET   | Get all movies\* |
-
-\* you can provide `id` parameter like so `/films/2` in order to get info about specific film.
+| Endpoint      | Method | Action                                                    |
+| :------------ | :----: | :-------------------------------------------------------- |
+| `/films/:id?` |  GET   | Get all films, when parameter provided, get specific film |
+| `/favorites`  |  POST  | Add film to created list in db                            |
 
 ## Tests
 
@@ -116,6 +115,43 @@ test("when id is not provided return all films", async () => {
 });
 ```
 
+Response
+
+```JSON
+[
+    {
+        "id": "1",
+        "title": "A New Hope",
+        "release_date": "1977-05-25"
+    },
+    {
+        "id": "2",
+        "title": "The Empire Strikes Back",
+        "release_date": "1980-05-17"
+    },
+    {
+        "id": "3",
+        "title": "Return of the Jedi",
+        "release_date": "1983-05-25"
+    },
+    {
+        "id": "4",
+        "title": "The Phantom Menace",
+        "release_date": "1999-05-19"
+    },
+    {
+        "id": "5",
+        "title": "Attack of the Clones",
+        "release_date": "2002-05-16"
+    },
+    {
+        "id": "6",
+        "title": "Revenge of the Sith",
+        "release_date": "2005-05-19"
+    }
+]
+```
+
 </details>
 
 `GET /films/id`
@@ -133,6 +169,16 @@ test("when id is provided return specific film", async () => {
 });
 ```
 
+### Response
+
+```JSON
+{
+  "id": "2",
+  "title": "The Empire Strikes Back",
+  "release_date": "1980-05-17"
+}
+```
+
 </details>
 
 <details>
@@ -148,6 +194,15 @@ test("when provided id is not a numeric value, return error message", async () =
 });
 ```
 
+### Response
+
+```JSON
+{
+    "fail": true,
+    "err": "id has to be number"
+}
+```
+
 </details>
 
 <details>
@@ -161,6 +216,15 @@ test("when film with provided id doesn't exist, return error message", async () 
   expect(res.status).toBe(404);
   expect(res.body.err).toBe("film with this id doesn't exist");
 });
+```
+
+### Response
+
+```JSON
+{
+    "fail": true,
+    "err": "film with this id doesn't exist"
+}
 ```
 
 </details>

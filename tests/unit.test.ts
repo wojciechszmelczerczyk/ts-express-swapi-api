@@ -1,4 +1,4 @@
-import { getFilmsService } from "../services/getFilms";
+import { getFilmsService } from "../services/FilmService";
 
 describe("FilmService -> getFilms", () => {
   test("when id is not provided return all films", async () => {
