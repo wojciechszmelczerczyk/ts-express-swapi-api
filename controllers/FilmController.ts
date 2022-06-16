@@ -1,4 +1,4 @@
-import _ from "lodash";
+import { map, chain } from "lodash";
 import { Request, Response } from "express";
 
 // schema validation
@@ -30,7 +30,7 @@ export const getFilms = async (req: Request, res: Response) => {
       if (!validateFilm(data)) throw new Error("JSON schema is not valid");
 
       // filter needed film data, update name of url property with id
-      const film = _.chain(data)
+      const film = chain(data)
         .pick("url", "title", "release_date")
         .update("url", extractIdFromURL);
 
@@ -46,8 +46,8 @@ export const getFilms = async (req: Request, res: Response) => {
 
       if (!validateFilms(results)) throw new Error("JSON schema is not valid");
 
-      const films = _.map(results, (film) => {
-        return _.chain(film)
+      const films = map(results, (film) => {
+        return chain(film)
           .update("url", extractIdFromURL)
           .pick("url", "title", "release_date");
       });
@@ -89,13 +89,13 @@ export const addFilm = async (req: Request, res: Response) => {
     );
 
     // filter needed film data, update name of url property with id
-    const film = _.chain(data)
+    const film = chain(data)
       .pick("title", "release_date", "characters")
       .set("characters", characters);
 
     // check if list with provided name already exists
     const list = await findFilmListService(name);
-
+    console.log(list);
     // if not create new list
     if (list === null) {
       const filmList = await addFilmService(name, film);
