@@ -99,7 +99,7 @@ Import this file [postman collection](/imoli.postman_collection.json) in Postman
 
 ### GET /favorites
 
-#### User can filter lists by name
+#### User can filter list by name
 
 `/favorites?name=NewList`
 
@@ -148,12 +148,23 @@ export const createDB = async (name: string) =>
 
 `Flush all tables`
 
-After tests all tables are flushed.
+Before and after tests all tables are flushed.
 
 ```javascript
 export const flushDBs = async () => {
   await prisma.film.deleteMany({});
   await prisma.filmList.deleteMany({});
+};
+```
+
+`Refresh sequences on id's`
+
+Before and after tests launch sequences are restarted.
+
+```javascript
+export const resetSequence = async () => {
+  await prisma.$executeRaw`ALTER SEQUENCE "Film_id_seq" RESTART WITH 1;`;
+  await prisma.$executeRaw`ALTER SEQUENCE "FilmList_id_seq" RESTART WITH 1;`;
 };
 ```
 
@@ -422,7 +433,7 @@ test("when limit query is provided, return specified number of lists", async () 
 ```javascript
 test("when provided id is correct, return specific list with correlated films", async () => {
   // New Saga list id
-  const id = 9;
+  const id = 8;
 
   const res = await request(app).get(`/favorites/${id}`);
 

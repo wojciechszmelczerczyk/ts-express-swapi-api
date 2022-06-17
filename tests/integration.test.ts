@@ -1,12 +1,18 @@
 import server from "../utils/createServer";
 import request from "supertest";
-import { createDB, flushDBs } from "./hooks/db";
+import { createDB, flushDBs, resetSequence } from "./hooks/db";
 
 let app;
 
 beforeAll(async () => {
   // run express server
   app = server();
+
+  // delete tables rows
+  await flushDBs();
+
+  // reset sequences
+  await resetSequence();
 
   // arbitrary lists
   let names = [
@@ -28,6 +34,8 @@ beforeAll(async () => {
 afterAll(async () => {
   // flush all dbs
   await flushDBs();
+  // reset sequential values
+  await resetSequence();
 });
 
 describe("GET /films", () => {
@@ -176,7 +184,7 @@ describe("GET /favorites", () => {
 describe("GET favorites/:id", () => {
   test("when provided id is correct, return specific list with correlated films", async () => {
     // New Saga list id
-    const id = 9;
+    const id = 8;
 
     const res = await request(app).get(`/favorites/${id}`);
 
