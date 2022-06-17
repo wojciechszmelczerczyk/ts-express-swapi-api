@@ -13,6 +13,7 @@ import {
   findFilmListService,
   getFilmByIdService,
   getAllListsService,
+  getListByIdService,
 } from "../services/FilmService";
 import axios from "axios";
 
@@ -150,6 +151,23 @@ export const getAllLists = async (req: Request, res: Response) => {
     const list = await getAllListsService(name, page, parsedLimit);
 
     res.json(list);
+  } catch (err) {
+    return res.json({
+      fail: true,
+      err: err.message,
+    });
+  }
+};
+
+export const getListById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const parsedId = parseInt(id);
+
+    const listById = await getListByIdService(parsedId);
+
+    res.json(listById);
   } catch (err) {
     return res.json({
       fail: true,

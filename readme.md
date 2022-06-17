@@ -2,17 +2,20 @@
 
 ## Description
 
-Simple movies middleware
+Simple movies middleware.
 
 ## Table of content
 
 - [Techstack](#techstack)
 - [Preqrequisities](#preqrequisities)
 - [To run](#to-run)
+- [Database architecture](#database-architecture)
 - [Env setup](#env-setup)
+- [Postman](#postman)
 - [API](#api)
 - [Tests](#tests)
-
+  - [To run](#to-run-1)
+  - [Hooks](#hooks)
   - [Unit](#unit)
   - [Integration](#integration)
 
@@ -28,7 +31,7 @@ Simple movies middleware
 ## Preqrequisities
 
 - `node`
-- `postgresql`
+- `postgresql db created (pgadmin recommended)`
 
 ## To run
 
@@ -50,11 +53,23 @@ cd /ts-express-swapi-middleware
 npm i
 ```
 
+### Synchronize db schema with prisma
+
+```
+npx prisma db push
+```
+
 ### Run API
 
 ```
 npm run start
 ```
+
+## Database architecture
+
+Film list has an id, name and film array which is reference to Film tables.
+
+[![](https://mermaid.ink/img/pako:eNpNjsEKwjAQRH9l2XPpB-SsQqGe6jGXpdnaoElkmxykyb8bS5XO6cE8hllxDIZRIcvJ0l3IaQ__XLr-CiW3bc4b991wAwUzLUfryADYoGNxZE1dXb-dxjizY42qoiF5aNS-VC-9DEU-GxuDoJrouXCDlGIY3n5EFSXxT9rP7Vb5AFuoNvs)](https://mermaid.live/edit#pako:eNpNjsEKwjAQRH9l2XPpB-SsQqGe6jGXpdnaoElkmxykyb8bS5XO6cE8hllxDIZRIcvJ0l3IaQ__XLr-CiW3bc4b991wAwUzLUfryADYoGNxZE1dXb-dxjizY42qoiF5aNS-VC-9DEU-GxuDoJrouXCDlGIY3n5EFSXxT9rP7Vb5AFuoNvs)
 
 ## Env setup
 
@@ -68,14 +83,19 @@ PORT=3000
 BASE_FILMS_URL=https://swapi.dev/api/films
 ```
 
+## Postman file
+
+Import this file [postman collection](/imoli.postman_collection.json) in Postman in order to explore API.
+
 ## API
 
-| Endpoint     | Method | Action                          |
-| :----------- | :----: | :------------------------------ |
-| `/films`     |  GET   | Get all films                   |
-| `/films/:id` |  GET   | Get single film                 |
-| `/favorites` |  POST  | Add film to created list in db  |
-| `/favorites` |  GET   | Get list of all lists from db\* |
+| Endpoint         | Method | Action                                      |
+| :--------------- | :----: | :------------------------------------------ |
+| `/films`         |  GET   | Get all films                               |
+| `/films/:id`     |  GET   | Get single film                             |
+| `/favorites`     |  POST  | Add film to created list in db              |
+| `/favorites`     |  GET   | Get list of all lists from db\*             |
+| `/favorites/:id` |  GET   | Get specific list with corrensponding films |
 
 ### GET /favorites
 
@@ -87,7 +107,7 @@ BASE_FILMS_URL=https://swapi.dev/api/films
 
 `/favorites?page=2&limit=3`
 
-When no limit is provided default page size is 5.
+While using pagination when no limit is provided default page size is 5.
 
 ## Tests
 
@@ -170,43 +190,6 @@ test("when id is not provided return all films", async () => {
 });
 ```
 
-Response
-
-```JSON
-[
-    {
-        "id": "1",
-        "title": "A New Hope",
-        "release_date": "1977-05-25"
-    },
-    {
-        "id": "2",
-        "title": "The Empire Strikes Back",
-        "release_date": "1980-05-17"
-    },
-    {
-        "id": "3",
-        "title": "Return of the Jedi",
-        "release_date": "1983-05-25"
-    },
-    {
-        "id": "4",
-        "title": "The Phantom Menace",
-        "release_date": "1999-05-19"
-    },
-    {
-        "id": "5",
-        "title": "Attack of the Clones",
-        "release_date": "2002-05-16"
-    },
-    {
-        "id": "6",
-        "title": "Revenge of the Sith",
-        "release_date": "2005-05-19"
-    }
-]
-```
-
 </details>
 <br/>
 
@@ -225,16 +208,6 @@ test("when id is provided return specific film", async () => {
 });
 ```
 
-### Response
-
-```JSON
-{
-  "id": "2",
-  "title": "The Empire Strikes Back",
-  "release_date": "1980-05-17"
-}
-```
-
 </details>
 
 <details>
@@ -250,15 +223,6 @@ test("when provided id is not a numeric value, return error message", async () =
 });
 ```
 
-### Response
-
-```JSON
-{
-    "fail": true,
-    "err": "id has to be number"
-}
-```
-
 </details>
 
 <details>
@@ -272,15 +236,6 @@ test("when film with provided id doesn't exist, return error message", async () 
   expect(res.status).toBe(404);
   expect(res.body.err).toBe("film with this id doesn't exist");
 });
-```
-
-### Response
-
-```JSON
-{
-    "fail": true,
-    "err": "film with this id doesn't exist"
-}
 ```
 
 </details>
@@ -397,7 +352,7 @@ test("when name query is not provided, return all lists", async () => {
   const res = await request(app).get("/favorites");
 
   // number of list tables added each time tests launch
-  expect(res.body.length).toBe(2);
+  expect(res.body.length).toBe(8);
 });
 ```
 
@@ -452,6 +407,39 @@ test("when limit query is provided, return specified number of lists", async () 
   const limit = 3;
   const res = await request(app).get("/favorites").query({ page, limit });
   expect(res.body.length).toBe(3);
+});
+```
+
+</details>
+
+<br />
+
+`GET /favorites/:id`
+
+<details>
+<summary>when provided id is correct, return specific list with correlated films</summary>
+
+```javascript
+test("when provided id is correct, return specific list with correlated films", async () => {
+  // New Saga list id
+  const id = 9;
+
+  const res = await request(app).get(`/favorites/${id}`);
+
+  expect(res.body.name).toBe("New Saga");
+});
+```
+
+</details>
+
+<details>
+<summary>when provided id is not a number value, return error message</summary>
+
+```javascript
+test("when provided id is not a number value, return error message", async () => {
+  const id = "ss";
+  const res = await request(app).get(`/favorites/${id}`);
+  expect(res.body.err).toBe("Provided id has to be a number.");
 });
 ```
 

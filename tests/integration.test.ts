@@ -35,6 +35,8 @@ describe("GET /films", () => {
     const res = await request(app).get("/films");
 
     expect(res.status).toBe(200);
+
+    // results array contain all films in https://swapi.dev/api/films API which number is 6.
     expect(res.body.length).toBe(6);
   });
 });
@@ -46,6 +48,7 @@ describe("GET /films/:id", () => {
 
     expect(res.status).toBe(200);
 
+    // Title of film with id 2 is The Empire Strikes Back.
     expect(res.body.title).toBe("The Empire Strikes Back");
   });
 
@@ -76,7 +79,8 @@ describe("POST /favorites", () => {
       .post("/favorites")
       .send({ id, name: listName });
 
-    expect(res.body).toBeTruthy();
+    // film with id 2 (which title is The Empire Strikes Back) was added to Old Saga list.
+    expect(res.body.film.title).toBe("The Empire Strikes Back");
   });
 
   test("when list with provided name doesn't exist and film id is correct, create new list and add film with provided id to it", async () => {
@@ -88,7 +92,11 @@ describe("POST /favorites", () => {
       .post("/favorites")
       .send({ id, name: listName });
 
-    expect(res).toBeTruthy();
+    // new list with New Saga name was created
+    expect(res.body.filmList.name).toBe("New Saga");
+
+    // film with id 2 was added to new list
+    expect(res.body.film.title).toBe("The Empire Strikes Back");
   });
 
   test("when film with provided id doesn't exist, return error", async () => {
@@ -162,5 +170,22 @@ describe("GET /favorites", () => {
     const limit = 3;
     const res = await request(app).get("/favorites").query({ page, limit });
     expect(res.body.length).toBe(3);
+  });
+});
+
+describe("GET favorites/:id", () => {
+  test("when provided id is correct, return specific list with correlated films", async () => {
+    // New Saga list id
+    const id = 9;
+
+    const res = await request(app).get(`/favorites/${id}`);
+
+    expect(res.body.name).toBe("New Saga");
+  });
+
+  test("when provided id is not a number value, return error message", async () => {
+    const id = "ss";
+    const res = await request(app).get(`/favorites/${id}`);
+    expect(res.body.err).toBe("Provided id has to be a number.");
   });
 });

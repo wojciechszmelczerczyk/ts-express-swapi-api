@@ -99,3 +99,23 @@ export const getAllListsService = async (
     };
   }
 };
+
+export const getListByIdService = async (id: number) => {
+  try {
+    return await prisma.filmList.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        films: true,
+      },
+    });
+  } catch (err) {
+    if (err.message.includes("Got invalid value NaN"))
+      err.message = "Provided id has to be a number.";
+    return {
+      fail: true,
+      err: err.message,
+    };
+  }
+};
