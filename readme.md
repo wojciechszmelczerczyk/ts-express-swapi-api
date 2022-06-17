@@ -7,7 +7,7 @@ Simple movies middleware.
 ## Table of content
 
 - [Techstack](#techstack)
-- [Preqrequisities](#preqrequisities)
+- [Prerequisities](#prerequisities)
 - [To run](#to-run)
 - [Database architecture](#database-architecture)
 - [Env setup](#env-setup)
@@ -28,7 +28,7 @@ Simple movies middleware.
 - `Jest`
 - `Supertest`
 
-## Preqrequisities
+## Prerequisities
 
 - `node`
 - `postgresql db created (pgadmin recommended)`
