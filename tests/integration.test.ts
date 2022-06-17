@@ -8,9 +8,21 @@ beforeAll(async () => {
   // run express server
   app = server();
 
-  let name = "Old Saga";
+  // arbitrary lists
+  let names = [
+    "Old Saga",
+    "Ice Saga",
+    "Fire Saga",
+    "God Saga",
+    "Titan Saga",
+    "Dark Saga",
+    "Light Saga",
+  ];
 
-  await createDB(name);
+  // create table in db for each name for test purposes
+  for (let i = 0; i < names.length; i++) {
+    await createDB(names[i]);
+  }
 });
 
 afterAll(async () => {
@@ -119,16 +131,36 @@ describe("POST /favorites", () => {
 });
 
 describe("GET /favorites", () => {
-  test("when no query name is provided, return all lists", async () => {
+  test("when name query is not provided, return all lists", async () => {
     const res = await request(app).get("/favorites");
 
-    expect(res.body.length).toBe(2);
+    // number of list tables added each time tests launch
+    expect(res.body.length).toBe(8);
   });
 
-  test("when query name is provided, return list by name", async () => {
+  test("when name query is provided, return list by name", async () => {
     const name = "New Saga";
     const res = await request(app).get("/favorites").query({ name });
 
     expect(res.body.name).toBe(name);
+  });
+
+  test("when page query is provided, return paginated lists by default 5", async () => {
+    const page = 1;
+    const res = await request(app).get("/favorites").query({ page });
+    expect(res.body.length).toBe(5);
+  });
+
+  test("when query page is not a numeric value, return error", async () => {
+    const page = "x";
+    const res = await request(app).get("/favorites").query({ page });
+    expect(res.body.err).toBe("Provided page value is not a number");
+  });
+
+  test("when limit query is provided, return specified number of lists", async () => {
+    const page = 2;
+    const limit = 3;
+    const res = await request(app).get("/favorites").query({ page, limit });
+    expect(res.body.length).toBe(3);
   });
 });

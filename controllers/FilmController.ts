@@ -139,11 +139,21 @@ export const addFilm = async (req: Request, res: Response) => {
 };
 
 export const getAllLists = async (req: Request, res: Response) => {
-  // intercept name from query string
-  const { name } = req.query;
+  try {
+    // intercept name from query string
+    const { name, page, limit } = req.query;
 
-  // pass qs as an argument, if qs is undefined, get all lists
-  const list = await getAllListsService(name);
+    // by default limit is 5
+    const parsedLimit = parseInt(limit as string) || 5;
 
-  res.json(list);
+    // get list/s from db
+    const list = await getAllListsService(name, page, parsedLimit);
+
+    res.json(list);
+  } catch (err) {
+    return res.json({
+      fail: true,
+      err: err.message,
+    });
+  }
 };

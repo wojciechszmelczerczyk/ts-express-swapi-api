@@ -70,12 +70,24 @@ BASE_FILMS_URL=https://swapi.dev/api/films
 
 ## API
 
-| Endpoint     | Method | Action                         |
-| :----------- | :----: | :----------------------------- |
-| `/films`     |  GET   | Get all films                  |
-| `/films/:id` |  GET   | Get single film                |
-| `/favorites` |  POST  | Add film to created list in db |
-| `/favorites` |  GET   | Get list of all lists from db  |
+| Endpoint     | Method | Action                          |
+| :----------- | :----: | :------------------------------ |
+| `/films`     |  GET   | Get all films                   |
+| `/films/:id` |  GET   | Get single film                 |
+| `/favorites` |  POST  | Add film to created list in db  |
+| `/favorites` |  GET   | Get list of all lists from db\* |
+
+### GET /favorites
+
+#### User can filter lists by name
+
+`/favorites?name=NewList`
+
+#### User can paginate list and control page size
+
+`/favorites?page=2&limit=3`
+
+When no limit is provided default page size is 5.
 
 ## Tests
 
@@ -378,12 +390,13 @@ test("when added film with provided id already exist in list, return duplicate e
 `GET /favorites`
 
 <details>
-<summary>when no query name is provided, return all lists</summary>
+<summary>when name query is not provided, return all lists</summary>
 
 ```javascript
-test("when no query name is provided, return all lists", async () => {
+test("when name query is not provided, return all lists", async () => {
   const res = await request(app).get("/favorites");
 
+  // number of list tables added each time tests launch
   expect(res.body.length).toBe(2);
 });
 ```
@@ -391,7 +404,7 @@ test("when no query name is provided, return all lists", async () => {
 </details>
 
 <details>
-<summary>when query name is provided, return list by name</summary>
+<summary>when name query is provided, return list by name</summary>
 
 ```javascript
 test("when query name is provided, return list by name", async () => {
@@ -399,6 +412,46 @@ test("when query name is provided, return list by name", async () => {
   const res = await request(app).get("/favorites").query({ name });
 
   expect(res.body.name).toBe(name);
+});
+```
+
+</details>
+
+<details>
+<summary>when page query is provided, return paginated lists by default 5</summary>
+
+```javascript
+test("when page query is provided, return paginated lists by default 5", async () => {
+  const page = 1;
+  const res = await request(app).get("/favorites").query({ page });
+  expect(res.body.length).toBe(5);
+});
+```
+
+</details>
+
+<details>
+<summary>when query page is not a numeric value, return error</summary>
+
+```javascript
+test("when query page is not a numeric value, return error", async () => {
+  const page = "x";
+  const res = await request(app).get("/favorites").query({ page });
+  expect(res.body.err).toBe("Provided page value is not a number");
+});
+```
+
+</details>
+
+<details>
+<summary>when limit query is provided, return specified number of lists</summary>
+
+```javascript
+test("when limit query is provided, return specified number of lists", async () => {
+  const page = 2;
+  const limit = 3;
+  const res = await request(app).get("/favorites").query({ page, limit });
+  expect(res.body.length).toBe(3);
 });
 ```
 

@@ -1,7 +1,7 @@
 import { config } from "dotenv";
 import axios from "axios";
 import prisma from "../prisma/client";
-import { ObjectChain } from "lodash";
+import { isString, ObjectChain } from "lodash";
 import { ParsedQs } from "qs";
 config();
 
@@ -67,14 +67,35 @@ export const findFilmListService = async (
   });
 };
 
-export const getAllListsService = async (name: queryType) => {
-  // if query
-  if (name === undefined) {
-    return await prisma.filmList.findMany();
+export const getAllListsService = async (
+  name: queryType,
+  page: queryType,
+  limit: number
+) => {
+  try {
+    if (isString(page) && !parseInt(page))
+      throw new Error("Provided page value is not a number");
+
+    // calculate offset
+    const offset = (parseInt(page as string) - 1) * limit;
+
+    // if no query is provided, return all lists
+    if (name === undefined && page === undefined) {
+      return await prisma.filmList.findMany();
+      // if page query is provided, paginate response
+    } else if (page) {
+      return await prisma.filmList.findMany({ skip: offset, take: limit });
+    }
+    // otherwise filter list by name
+    return await prisma.filmList.findUnique({
+      where: {
+        name: name as string,
+      },
+    });
+  } catch (err) {
+    return {
+      fail: true,
+      err: err.message,
+    };
   }
-  return await prisma.filmList.findUnique({
-    where: {
-      name: name as string,
-    },
-  });
 };
