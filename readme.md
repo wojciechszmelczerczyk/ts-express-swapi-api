@@ -67,9 +67,9 @@ npm run start
 
 ## Database architecture
 
-Film list has an id, name and film array which is reference to Film tables.
+Film list has an id, name, film array and distinct characters array.
 
-[![](https://mermaid.ink/img/pako:eNpNjsEKwjAQRH9l2XPpB-SsQqGe6jGXpdnaoElkmxykyb8bS5XO6cE8hllxDIZRIcvJ0l3IaQ__XLr-CiW3bc4b991wAwUzLUfryADYoGNxZE1dXb-dxjizY42qoiF5aNS-VC-9DEU-GxuDoJrouXCDlGIY3n5EFSXxT9rP7Vb5AFuoNvs)](https://mermaid.live/edit#pako:eNpNjsEKwjAQRH9l2XPpB-SsQqGe6jGXpdnaoElkmxykyb8bS5XO6cE8hllxDIZRIcvJ0l3IaQ__XLr-CiW3bc4b991wAwUzLUfryADYoGNxZE1dXb-dxjizY42qoiF5aNS-VC-9DEU-GxuDoJrouXCDlGIY3n5EFSXxT9rP7Vb5AFuoNvs)
+[![](https://mermaid.ink/img/pako:eNqFz7EOgjAQgOFXaW4mPEA3ghhJcAHGLhd6SqNtTWkHQ_vuVoOGzZv-5L7hboXJSgIO5A4Krw61MOw3x7Y7sxTLMsZPd-0wMs5mXPaqPlV9VY9N_5_umzEoQJPTqGQ-YH3vBPiZNAngOSW6mwBhUnbhIdFTI5W3DvgF7wsVgMHb4Wkm4N4F-qLtj02lF4UxQjk)](https://mermaid.live/edit#pako:eNqFz7EOgjAQgOFXaW4mPEA3ghhJcAHGLhd6SqNtTWkHQ_vuVoOGzZv-5L7hboXJSgIO5A4Krw61MOw3x7Y7sxTLMsZPd-0wMs5mXPaqPlV9VY9N_5_umzEoQJPTqGQ-YH3vBPiZNAngOSW6mwBhUnbhIdFTI5W3DvgF7wsVgMHb4Wkm4N4F-qLtj02lF4UxQjk)
 
 ## Env setup
 
@@ -81,6 +81,8 @@ DB_URL=your-postgres-url
 PORT=3000
 
 BASE_FILMS_URL=https://swapi.dev/api/films
+
+XLSX_FILE_NAME=someFileName.xlsx
 ```
 
 ## Postman file
@@ -89,13 +91,14 @@ Import this file [postman collection](/imoli.postman_collection.json) in Postman
 
 ## API
 
-| Endpoint         | Method | Action                                      |
-| :--------------- | :----: | :------------------------------------------ |
-| `/films`         |  GET   | Get all films                               |
-| `/films/:id`     |  GET   | Get single film                             |
-| `/favorites`     |  POST  | Add film to created list in db              |
-| `/favorites`     |  GET   | Get list of all lists from db\*             |
-| `/favorites/:id` |  GET   | Get specific list with corrensponding films |
+| Endpoint              | Method | Action                                                          |
+| :-------------------- | :----: | :-------------------------------------------------------------- |
+| `/films`              |  GET   | Get all films                                                   |
+| `/films/:id`          |  GET   | Get single film                                                 |
+| `/favorites`          |  POST  | Add film to created list in db                                  |
+| `/favorites`          |  GET   | Get list of all lists from db\*                                 |
+| `/favorites/:id`      |  GET   | Get specific list with corrensponding films                     |
+| `/favorites/:id/file` |  GET   | Save xlsx file with distinct characters and corresponding films |
 
 ### GET /favorites
 
@@ -152,6 +155,7 @@ Before and after tests all tables are flushed.
 
 ```javascript
 export const flushDBs = async () => {
+  await prisma.character.deleteMany({});
   await prisma.film.deleteMany({});
   await prisma.filmList.deleteMany({});
 };
@@ -163,6 +167,7 @@ Before and after tests launch sequences are restarted.
 
 ```javascript
 export const resetSequence = async () => {
+  await prisma.$executeRaw`ALTER SEQUENCE "Character_id_seq" RESTART WITH 1;`;
   await prisma.$executeRaw`ALTER SEQUENCE "Film_id_seq" RESTART WITH 1;`;
   await prisma.$executeRaw`ALTER SEQUENCE "FilmList_id_seq" RESTART WITH 1;`;
 };
@@ -455,3 +460,5 @@ test("when provided id is not a number value, return error message", async () =>
 ```
 
 </details>
+
+<br />

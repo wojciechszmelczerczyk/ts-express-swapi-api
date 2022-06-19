@@ -3,6 +3,7 @@ import axios from "axios";
 import prisma from "../prisma/client";
 import { isString, ObjectChain, difference } from "lodash";
 import { ParsedQs } from "qs";
+import { Workbook } from "exceljs";
 config();
 
 type Film = {
@@ -19,7 +20,7 @@ type FilmList = {
 
 type properties = "title" | "release_date" | "characters";
 
-type queryType = string | string[] | ParsedQs | ParsedQs[] | undefined;
+type queryType = string | string[] | number | ParsedQs | ParsedQs[] | undefined;
 
 export const getFilmsService = async () =>
   await axios.get(`${process.env.BASE_FILMS_URL}`);
@@ -32,7 +33,6 @@ export const addFilmService = async (
   film: ObjectChain<Pick<Film, properties>>
 ): Promise<FilmList> => {
   const { title, release_date, characters } = film.value();
-
   return await prisma.filmList.create({
     data: {
       name,
@@ -62,10 +62,12 @@ export const updateFilmService = async (
     },
   });
 
+  // names of characters from database
   const characterNames = charactersFromDb.characters.map(
     (character) => character.name
   );
 
+  // A/B in order to return only new characters
   const distinctCharacters = difference(characters, characterNames);
 
   return await prisma.filmList.update({
@@ -126,20 +128,85 @@ export const getAllListsService = async (
   }
 };
 
-export const getListByIdService = async (id: number) => {
+export const getListByIdService = async (id: queryType) => {
+  if (!parseInt(id as string))
+    throw new Error("Provided id has to be a number.");
+
   try {
-    return await prisma.filmList.findUnique({
+    const list = await prisma.filmList.findUnique({
       where: {
-        id,
+        id: parseInt(id as string),
       },
       include: {
         films: true,
         characters: true,
       },
     });
+
+    if (list === null) throw new Error("List with provided id not found");
+
+    return list;
   } catch (err) {
-    if (err.message.includes("Got invalid value NaN"))
-      err.message = "Provided id has to be a number.";
+    return {
+      fail: true,
+      err: err.message,
+    };
+  }
+};
+
+export const exportSpecificListToExcelService = async (id: queryType) => {
+  try {
+    if (!parseInt(id as string))
+      throw new Error("Provided id has to be a number");
+
+    // excel workbook
+    const wb = new Workbook();
+
+    // worksheet
+    const worksheet = wb.addWorksheet("Characters");
+
+    const listDetails = await prisma.filmList.findUnique({
+      where: {
+        id: parseInt(id as string),
+      },
+      include: {
+        films: {
+          select: {
+            title: true,
+          },
+        },
+        characters: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+
+    // if list with provided id doesn't exist, return error message
+    if (listDetails === null)
+      throw new Error("List with provided id doesn't exist");
+
+    const { characters } = listDetails;
+    // add header
+    worksheet.columns = [
+      { header: "Characters", key: "characters", width: 30 },
+      { header: "Films", key: "films", width: 30 },
+    ];
+
+    // iterate on list details, add characters and title to worksheet
+    for (let i = 0; i < characters.length; i++) {
+      worksheet.addRow({
+        characters: characters[i].name,
+      });
+    }
+
+    // filename
+    const fileName = process.env.XLSX_FILE_NAME as string;
+
+    // save file
+    await wb.xlsx.writeFile(fileName);
+  } catch (err) {
     return {
       fail: true,
       err: err.message,

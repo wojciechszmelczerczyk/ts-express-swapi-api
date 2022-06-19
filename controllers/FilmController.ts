@@ -1,11 +1,10 @@
-import { map, chain } from "lodash";
+// env
+import { config } from "dotenv";
+config();
+
 import { Request, Response } from "express";
 
-// schema validation
-import { validateFilm, validateFilms } from "../api/schema/response";
-
-// helper function
-import extractIdFromURL from "../utils/extractIdFromURL";
+// services
 import {
   getFilmsService,
   addFilmService,
@@ -14,7 +13,18 @@ import {
   getFilmByIdService,
   getAllListsService,
   getListByIdService,
+  exportSpecificListToExcelService,
 } from "../services/FilmService";
+
+// schema validation
+import { validateFilm, validateFilms } from "../api/schema/response";
+
+// helper function
+import extractIdFromURL from "../utils/extractIdFromURL";
+
+// lodash
+import { map, chain } from "lodash";
+
 import axios from "axios";
 
 export const getFilms = async (req: Request, res: Response) => {
@@ -60,7 +70,7 @@ export const getFilmById = async (req: Request, res: Response) => {
     // validate json schema structure
     if (!validateFilm(data)) throw new Error("JSON schema is not valid");
 
-    // filter needed film data TODO: change property name from url to id
+    // filter needed film data
     const film = chain(data)
       .pick("url", "title", "release_date")
       .update("url", extractIdFromURL);
@@ -86,16 +96,16 @@ export const addFilm = async (req: Request, res: Response) => {
     if (isNaN(parseInt(id))) throw new Error("id has to be number");
 
     // get film by id
-    const { data } = await getFilmByIdService(id as string);
+    const { data } = await getFilmByIdService(id);
 
     // validate json schema structure
     if (!validateFilm(data)) throw new Error("JSON schema is not valid");
 
     // get all character urls from film
-    const characterUrls = data.characters;
+    const characterUrls: string[] = data.characters;
 
-    // get all characters names
-    const characters = await Promise.all(
+    // get all characters names and urls
+    const characters: any[] = await Promise.all(
       characterUrls.map(async (url) => {
         const { data } = await axios.get(url);
         return data.name;
@@ -163,11 +173,27 @@ export const getListById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
-    const parsedId = parseInt(id);
-
-    const listById = await getListByIdService(parsedId);
+    const listById = await getListByIdService(id);
 
     res.json(listById);
+  } catch (err) {
+    return res.json({
+      fail: true,
+      err: err.message,
+    });
+  }
+};
+
+export const exportSpecificListToExcel = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const { id } = req.params;
+
+    await exportSpecificListToExcelService(id);
+
+    res.download(`${process.env.XLSX_FILE_NAME}`);
   } catch (err) {
     return res.json({
       fail: true,

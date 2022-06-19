@@ -155,7 +155,7 @@ describe("GET /favorites", () => {
   });
 
   test("when name query is provided, return list by name", async () => {
-    const name = "New Saga";
+    const name = "Titan Saga";
     const res = await request(app).get("/favorites").query({ name });
 
     expect(res.body.name).toBe(name);
@@ -181,14 +181,14 @@ describe("GET /favorites", () => {
   });
 });
 
-describe("GET favorites/:id", () => {
+describe("GET /favorites/:id", () => {
   test("when provided id is correct, return specific list with correlated films", async () => {
-    // New Saga list id
-    const id = 8;
+    // Ice Saga list id
+    const id = 2;
 
     const res = await request(app).get(`/favorites/${id}`);
 
-    expect(res.body.name).toBe("New Saga");
+    expect(res.body.name).toBe("Ice Saga");
   });
 
   test("when provided id is not a number value, return error message", async () => {

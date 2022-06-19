@@ -9,7 +9,7 @@ datasource db {
 
 model Character {
   id        Int @id @default(autoincrement())
-  name      String @unique
+  name      String 
   listId  Int
   filmList FilmList @relation(fields: [listId], references: [id])
 }

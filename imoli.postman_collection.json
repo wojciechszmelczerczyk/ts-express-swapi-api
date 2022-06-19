@@ -33,7 +33,60 @@
 					]
 				}
 			},
-			"response": []
+			"response": [
+				{
+					"name": "get all films",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/films",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"films"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "415"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"19f-Y5ki6YqMBfq2d8mi08rc1m3/Yg0\""
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 19 Jun 2022 18:02:20 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"url\": \"1\",\n        \"title\": \"A New Hope\",\n        \"release_date\": \"1977-05-25\"\n    },\n    {\n        \"url\": \"2\",\n        \"title\": \"The Empire Strikes Back\",\n        \"release_date\": \"1980-05-17\"\n    },\n    {\n        \"url\": \"3\",\n        \"title\": \"Return of the Jedi\",\n        \"release_date\": \"1983-05-25\"\n    },\n    {\n        \"url\": \"4\",\n        \"title\": \"The Phantom Menace\",\n        \"release_date\": \"1999-05-19\"\n    },\n    {\n        \"url\": \"5\",\n        \"title\": \"Attack of the Clones\",\n        \"release_date\": \"2002-05-16\"\n    },\n    {\n        \"url\": \"6\",\n        \"title\": \"Revenge of the Sith\",\n        \"release_date\": \"2005-05-19\"\n    }\n]"
+				}
+			]
 		},
 		{
 			"name": "get film by id",
@@ -64,12 +117,190 @@
 					"variable": [
 						{
 							"key": "id",
-							"value": "4"
+							"value": "123"
 						}
 					]
 				}
 			},
-			"response": []
+			"response": [
+				{
+					"name": "get film by id",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/films/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"films",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "73"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"49-FC6tw8QbdqjByUX7u6zLMA8gG5A\""
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 19 Jun 2022 18:01:45 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"url\": \"2\",\n    \"title\": \"The Empire Strikes Back\",\n    \"release_date\": \"1980-05-17\"\n}"
+				},
+				{
+					"name": "get film by id (when provided id is not number)",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/films/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"films",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "s"
+								}
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "41"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"29-7UcisTtGGvghw7uavIoPmnnZwMs\""
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 19 Jun 2022 20:08:44 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"fail\": true,\n    \"err\": \"id has to be number\"\n}"
+				},
+				{
+					"name": "get film by id (when film with provided id doesn't exist)",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/films/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"films",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "123"
+								}
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "53"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"35-TIyt1ZNzkHeHD+CrWB5OiBEfROs\""
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 19 Jun 2022 20:09:16 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"fail\": true,\n    \"err\": \"film with this id doesn't exist\"\n}"
+				}
+			]
 		},
 		{
 			"name": "add film",
@@ -78,7 +309,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"id\":1,\n    \"name\":\"God Saga\"\n}",
+					"raw": "\n{\n    \"id\":3,\n    \"name\":\"Angel Saga\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -96,7 +327,252 @@
 					]
 				}
 			},
-			"response": []
+			"response": [
+				{
+					"name": "add film",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\n{\n    \"id\":1,\n    \"name\":\"What Saga\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/favorites",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"favorites"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "379"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"17b-b+SoDy5CLG2K73o+Q6ba/up9V1E\""
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 19 Jun 2022 18:01:09 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"filmList\": {\n        \"id\": 1,\n        \"name\": \"What Saga\"\n    },\n    \"film\": {\n        \"title\": \"A New Hope\",\n        \"release_date\": \"1977-05-25\",\n        \"characters\": [\n            \"Luke Skywalker\",\n            \"C-3PO\",\n            \"R2-D2\",\n            \"Darth Vader\",\n            \"Leia Organa\",\n            \"Owen Lars\",\n            \"Beru Whitesun lars\",\n            \"R5-D4\",\n            \"Biggs Darklighter\",\n            \"Obi-Wan Kenobi\",\n            \"Wilhuff Tarkin\",\n            \"Chewbacca\",\n            \"Han Solo\",\n            \"Greedo\",\n            \"Jabba Desilijic Tiure\",\n            \"Wedge Antilles\",\n            \"Jek Tono Porkins\",\n            \"Raymus Antilles\"\n        ]\n    }\n}"
+				},
+				{
+					"name": "add film (when provided id is not a number)",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\n{\n    \"id\":\"ss\",\n    \"name\":\"Old Saga\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/favorites",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"favorites"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "41"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"29-7UcisTtGGvghw7uavIoPmnnZwMs\""
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 19 Jun 2022 20:09:50 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"fail\": true,\n    \"err\": \"id has to be number\"\n}"
+				},
+				{
+					"name": "add film (when film with provided id doesn't exist)",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\n{\n    \"id\":123,\n    \"name\":\"Old Saga\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/favorites",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"favorites"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "53"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"35-TIyt1ZNzkHeHD+CrWB5OiBEfROs\""
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 19 Jun 2022 20:10:27 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"fail\": true,\n    \"err\": \"film with this id doesn't exist\"\n}"
+				},
+				{
+					"name": "add film (when film with provided id already exist in the list)",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\n{\n    \"id\":1,\n    \"name\":\"Old Saga\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/favorites",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"favorites"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "85"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"55-8hKwZNSW1AYx4fYiF5bpuTa/YQQ\""
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 19 Jun 2022 20:13:59 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"fail\": true,\n    \"err\": \"film duplication error. Film with this id already exist in list\"\n}"
+				}
+			]
 		},
 		{
 			"name": "get list of all lists",
@@ -125,7 +601,238 @@
 					]
 				}
 			},
-			"response": []
+			"response": [
+				{
+					"name": "get list of all lists",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/favorites",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"favorites"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "195"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"c3-5Noh9GK8T89LpL5NGMaah1OjYj8\""
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 19 Jun 2022 20:35:13 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"id\": 1,\n        \"name\": \"Old Saga\"\n    },\n    {\n        \"id\": 2,\n        \"name\": \"New Saga\"\n    },\n    {\n        \"id\": 3,\n        \"name\": \"Odd Saga\"\n    },\n    {\n        \"id\": 4,\n        \"name\": \"Even Saga\"\n    },\n    {\n        \"id\": 5,\n        \"name\": \"God Saga\"\n    },\n    {\n        \"id\": 6,\n        \"name\": \"Titan Saga\"\n    },\n    {\n        \"id\": 7,\n        \"name\": \"Angel Saga\"\n    }\n]"
+				},
+				{
+					"name": "get list of all lists (when pagination is applied, no limit is provided, by default is 5)",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/favorites?page=1",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"favorites"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "137"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"89-UK97w8uIZq2O38mPF7oBmyFeoSE\""
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 19 Jun 2022 20:35:29 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"id\": 1,\n        \"name\": \"Old Saga\"\n    },\n    {\n        \"id\": 2,\n        \"name\": \"New Saga\"\n    },\n    {\n        \"id\": 3,\n        \"name\": \"Odd Saga\"\n    },\n    {\n        \"id\": 4,\n        \"name\": \"Even Saga\"\n    },\n    {\n        \"id\": 5,\n        \"name\": \"God Saga\"\n    }\n]"
+				},
+				{
+					"name": "get list of all lists (when pagination and limit is provided)",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/favorites?page=1&limit=2",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"favorites"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "55"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"37-TbA4W4gvGIq0Lid6XObq/FLXtJw\""
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 19 Jun 2022 20:36:37 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"id\": 1,\n        \"name\": \"Old Saga\"\n    },\n    {\n        \"id\": 2,\n        \"name\": \"New Saga\"\n    }\n]"
+				},
+				{
+					"name": "get list of all lists (when page query value is not a number)",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/favorites?page=s",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"favorites"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "s"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "57"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"39-BOfeJNm5qtfSpPhENo8NryHAEro\""
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 19 Jun 2022 20:37:12 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"fail\": true,\n    \"err\": \"Provided page value is not a number\"\n}"
+				}
+			]
 		},
 		{
 			"name": "get specific list",
@@ -145,12 +852,190 @@
 					"variable": [
 						{
 							"key": "id",
-							"value": "2"
+							"value": "123"
 						}
 					]
 				}
 			},
-			"response": []
+			"response": [
+				{
+					"name": "get specific list",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/favorites/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"favorites",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "1376"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"560-mpeXY5WoDOsYIREcMe9W2kZmsWY\""
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 19 Jun 2022 18:39:04 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 1,\n    \"name\": \"What Saga\",\n    \"films\": [\n        {\n            \"id\": 1,\n            \"title\": \"A New Hope\",\n            \"release_date\": \"1977-05-25\",\n            \"listId\": 1\n        },\n        {\n            \"id\": 3,\n            \"title\": \"Return of the Jedi\",\n            \"release_date\": \"1983-05-25\",\n            \"listId\": 1\n        }\n    ],\n    \"characters\": [\n        {\n            \"id\": 1,\n            \"name\": \"Luke Skywalker\",\n            \"listId\": 1\n        },\n        {\n            \"id\": 2,\n            \"name\": \"C-3PO\",\n            \"listId\": 1\n        },\n        {\n            \"id\": 3,\n            \"name\": \"R2-D2\",\n            \"listId\": 1\n        },\n        {\n            \"id\": 4,\n            \"name\": \"Darth Vader\",\n            \"listId\": 1\n        },\n        {\n            \"id\": 5,\n            \"name\": \"Leia Organa\",\n            \"listId\": 1\n        },\n        {\n            \"id\": 6,\n            \"name\": \"Owen Lars\",\n            \"listId\": 1\n        },\n        {\n            \"id\": 7,\n            \"name\": \"Beru Whitesun lars\",\n            \"listId\": 1\n        },\n        {\n            \"id\": 8,\n            \"name\": \"R5-D4\",\n            \"listId\": 1\n        },\n        {\n            \"id\": 9,\n            \"name\": \"Biggs Darklighter\",\n            \"listId\": 1\n        },\n        {\n            \"id\": 10,\n            \"name\": \"Obi-Wan Kenobi\",\n            \"listId\": 1\n        },\n        {\n            \"id\": 11,\n            \"name\": \"Wilhuff Tarkin\",\n            \"listId\": 1\n        },\n        {\n            \"id\": 12,\n            \"name\": \"Chewbacca\",\n            \"listId\": 1\n        },\n        {\n            \"id\": 13,\n            \"name\": \"Han Solo\",\n            \"listId\": 1\n        },\n        {\n            \"id\": 14,\n            \"name\": \"Greedo\",\n            \"listId\": 1\n        },\n        {\n            \"id\": 15,\n            \"name\": \"Jabba Desilijic Tiure\",\n            \"listId\": 1\n        },\n        {\n            \"id\": 16,\n            \"name\": \"Wedge Antilles\",\n            \"listId\": 1\n        },\n        {\n            \"id\": 17,\n            \"name\": \"Jek Tono Porkins\",\n            \"listId\": 1\n        },\n        {\n            \"id\": 18,\n            \"name\": \"Raymus Antilles\",\n            \"listId\": 1\n        },\n        {\n            \"id\": 20,\n            \"name\": \"Yoda\",\n            \"listId\": 1\n        },\n        {\n            \"id\": 21,\n            \"name\": \"Palpatine\",\n            \"listId\": 1\n        },\n        {\n            \"id\": 22,\n            \"name\": \"Boba Fett\",\n            \"listId\": 1\n        },\n        {\n            \"id\": 23,\n            \"name\": \"Lando Calrissian\",\n            \"listId\": 1\n        },\n        {\n            \"id\": 24,\n            \"name\": \"Ackbar\",\n            \"listId\": 1\n        },\n        {\n            \"id\": 25,\n            \"name\": \"Mon Mothma\",\n            \"listId\": 1\n        },\n        {\n            \"id\": 26,\n            \"name\": \"Arvel Crynyd\",\n            \"listId\": 1\n        },\n        {\n            \"id\": 27,\n            \"name\": \"Wicket Systri Warrick\",\n            \"listId\": 1\n        },\n        {\n            \"id\": 28,\n            \"name\": \"Nien Nunb\",\n            \"listId\": 1\n        },\n        {\n            \"id\": 29,\n            \"name\": \"Bib Fortuna\",\n            \"listId\": 1\n        }\n    ]\n}"
+				},
+				{
+					"name": "get specific list (when lprovided id is not a number)",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/favorites/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"favorites",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "ss"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "53"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"35-lyZfLQw2KU+Ux5BCRzT6kVv/FG0\""
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 19 Jun 2022 20:11:06 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"fail\": true,\n    \"err\": \"Provided id has to be a number.\"\n}"
+				},
+				{
+					"name": "get specific list (when list with provided id doesn't exist)",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/favorites/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"favorites",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "123"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "53"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"35-tA/MZSrEq3XoE9F+7Gt8KDRabvg\""
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 19 Jun 2022 20:11:38 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"fail\": true,\n    \"err\": \"List with provided id not found\"\n}"
+				}
+			]
 		},
 		{
 			"name": "get excel file of specific list",
@@ -171,7 +1056,7 @@
 					"variable": [
 						{
 							"key": "id",
-							"value": ""
+							"value": "2"
 						}
 					]
 				}
