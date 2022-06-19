@@ -462,3 +462,22 @@ test("when provided id is not a number value, return error message", async () =>
 </details>
 
 <br />
+
+`GET /favorites/:id/file`
+
+<details>
+<summary>when provided id is correct, download .xlsx file with list of characters</summary>
+
+```javascript
+test("when provided id is correct, download .xlsx file with list of characters", async () => {
+  const id = 2;
+
+  const res = await request(app).get(`/favorites/${id}/file`);
+
+  expect(res.headers["content-type"]).toBe(
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+  );
+});
+```
+
+</details>

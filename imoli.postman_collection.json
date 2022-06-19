@@ -2,6 +2,7 @@
 	"info": {
 		"_postman_id": "68c1d414-35f5-4110-b9ae-2a7fb00b14dd",
 		"name": "imoli",
+		"description": "## Get all films\n\n*   return all films processed list\n    \n\n## Get film by id\n\n*   return specific film\n    \n\n``` javascript\n// set id of film\nconst {url} = pm.response.json()\npm.collectionVariables.set(\"filmId\", url);\n\n```\n\n## Add film\n\n*   Add film with id intercepted from previous request to db to list. If list with provided name doesn't exist, one is created\n    \n\n``` json\n{\n    \"id\":'filmId',\n    \"name\":\"Angel Saga\"\n}\n\n```\n\n## Get list of all lists\n\n*   return all created lists\n    \n\nIntercept single list and set collection list id variable\n\n``` javascript\nconst lists = pm.response.json()\nconst singleList = lists[0]\nconst id = singleList.id\npm.collectionVariables.set(\"listId\", id);\n\n```\n\n## Get specific list\n\n*   return list by id intercepted from previous request\n    \n\n## Get excel file of specific list\n\n*   download `xlsx` file.\n    \n\nPlease use send and download option while sending request.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "16678431"
 	},
@@ -95,6 +96,10 @@
 					"listen": "test",
 					"script": {
 						"exec": [
+							"// set id of film",
+							"const {url} = pm.response.json()",
+							"",
+							"pm.collectionVariables.set(\"filmId\", url);",
 							""
 						],
 						"type": "text/javascript"
@@ -117,7 +122,7 @@
 					"variable": [
 						{
 							"key": "id",
-							"value": "123"
+							"value": "2"
 						}
 					]
 				}
@@ -309,7 +314,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "\n{\n    \"id\":3,\n    \"name\":\"Angel Saga\"\n}",
+					"raw": "\n{\n    \"id\":{{filmId}},\n    \"name\":\"Angel Saga\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -581,6 +586,13 @@
 					"listen": "test",
 					"script": {
 						"exec": [
+							"const lists = pm.response.json()",
+							"",
+							"const singleList = lists[0]",
+							"",
+							"const id = singleList.id",
+							"",
+							"pm.collectionVariables.set(\"listId\", id);",
 							""
 						],
 						"type": "text/javascript"
@@ -852,7 +864,7 @@
 					"variable": [
 						{
 							"key": "id",
-							"value": "123"
+							"value": "{{listId}}"
 						}
 					]
 				}
@@ -1056,7 +1068,7 @@
 					"variable": [
 						{
 							"key": "id",
-							"value": "2"
+							"value": "{{listId}}"
 						}
 					]
 				}
@@ -1085,10 +1097,6 @@
 		}
 	],
 	"variable": [
-		{
-			"key": "id",
-			"value": ""
-		},
 		{
 			"key": "listId",
 			"value": ""

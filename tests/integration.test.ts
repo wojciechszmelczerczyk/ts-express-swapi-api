@@ -197,3 +197,15 @@ describe("GET /favorites/:id", () => {
     expect(res.body.err).toBe("Provided id has to be a number.");
   });
 });
+
+describe("GET /favorites/:id/file", () => {
+  test("when provided id is correct, download .xlsx file with list of characters", async () => {
+    const id = 2;
+
+    const res = await request(app).get(`/favorites/${id}/file`);
+
+    expect(res.headers["content-type"]).toBe(
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+  });
+});
