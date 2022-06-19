@@ -86,7 +86,7 @@ export const addFilm = async (req: Request, res: Response) => {
     if (isNaN(parseInt(id))) throw new Error("id has to be number");
 
     // get film by id
-    const { data } = await getFilmByIdService(id);
+    const { data } = await getFilmByIdService(id as string);
 
     // validate json schema structure
     if (!validateFilm(data)) throw new Error("JSON schema is not valid");

@@ -1,7 +1,7 @@
 import { config } from "dotenv";
 import axios from "axios";
 import prisma from "../prisma/client";
-import { isString, ObjectChain } from "lodash";
+import { isString, ObjectChain, difference } from "lodash";
 import { ParsedQs } from "qs";
 config();
 
@@ -31,11 +31,16 @@ export const addFilmService = async (
   name: string,
   film: ObjectChain<Pick<Film, properties>>
 ): Promise<FilmList> => {
+  const { title, release_date, characters } = film.value();
+
   return await prisma.filmList.create({
     data: {
       name,
       films: {
-        create: [film.value()],
+        create: [{ title, release_date }],
+      },
+      characters: {
+        create: characters.map((character) => ({ name: character })),
       },
     },
   });
@@ -44,14 +49,35 @@ export const addFilmService = async (
 export const updateFilmService = async (
   name: string,
   film: ObjectChain<Pick<Film, properties>>
-): Promise<FilmList> => {
+) => {
+  const { title, release_date, characters } = film.value();
+
+  // get characters from list db
+  const [charactersFromDb] = await prisma.filmList.findMany({
+    where: {
+      name,
+    },
+    select: {
+      characters: true,
+    },
+  });
+
+  const characterNames = charactersFromDb.characters.map(
+    (character) => character.name
+  );
+
+  const distinctCharacters = difference(characters, characterNames);
+
   return await prisma.filmList.update({
     where: {
       name: name,
     },
     data: {
       films: {
-        create: [film.value()],
+        create: [{ title, release_date }],
+      },
+      characters: {
+        create: distinctCharacters.map((character) => ({ name: character })),
       },
     },
   });
@@ -108,6 +134,7 @@ export const getListByIdService = async (id: number) => {
       },
       include: {
         films: true,
+        characters: true,
       },
     });
   } catch (err) {

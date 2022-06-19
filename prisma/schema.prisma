@@ -7,11 +7,17 @@ datasource db {
   url      = env("DB_URL")
 }
 
+model Character {
+  id        Int @id @default(autoincrement())
+  name      String @unique
+  listId  Int
+  filmList FilmList @relation(fields: [listId], references: [id])
+}
+
 model Film {
   id           Int      @id @default(autoincrement())
   title        String
   release_date String
-  characters   String[]
   listId       Int
   filmList     FilmList @relation(fields: [listId], references: [id])
 
@@ -22,4 +28,6 @@ model FilmList {
   id    Int    @id @default(autoincrement())
   name  String @unique
   films Film[]
+  characters Character[] 
+
 }
