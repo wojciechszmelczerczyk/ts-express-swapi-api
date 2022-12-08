@@ -100,7 +100,6 @@ Import this file [postman collection](/imoli.postman_collection.json) in Postman
 |   GET    |   [`/favorites/:id`](./docs/getFavoriteById.md)    |
 |   GET    | [`/favorites/:id/file`](./docs/getFileFavorite.md) |
 
-### GET /favorites
 
 ## Tests
 
