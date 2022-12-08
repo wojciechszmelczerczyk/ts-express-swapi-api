@@ -91,26 +91,16 @@ Import this file [postman collection](/imoli.postman_collection.json) in Postman
 
 ## API
 
-| Endpoint              | Method | Action                                                          |
-| :-------------------- | :----: | :-------------------------------------------------------------- |
-| `/films`              |  GET   | Get all films                                                   |
-| `/films/:id`          |  GET   | Get single film                                                 |
-| `/favorites`          |  POST  | Add film to created list in db                                  |
-| `/favorites`          |  GET   | Get list of all lists from db\*                                 |
-| `/favorites/:id`      |  GET   | Get specific list with corrensponding films                     |
-| `/favorites/:id/file` |  GET   | Save xlsx file with distinct characters and corresponding films |
+| Endpoint |                       Method                       |
+| :------: | :------------------------------------------------: |
+|   GET    |           [`/films`](./docs/getFilms.md)           |
+|   GET    |       [`/films/:id`](./docs/getFilmById.md)        |
+|   POST   |           [`/favorites`](./docs/post.md)           |
+|   GET    |       [`/favorites`](./docs/getFavorites.md)       |
+|   GET    |   [`/favorites/:id`](./docs/getFavoriteById.md)    |
+|   GET    | [`/favorites/:id/file`](./docs/getFileFavorite.md) |
 
 ### GET /favorites
-
-#### User can filter list by name
-
-`/favorites?name=NewList`
-
-#### User can paginate list and control page size
-
-`/favorites?page=2&limit=3`
-
-While using pagination when no limit is provided default page size is 5.
 
 ## Tests
 

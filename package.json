@@ -15,6 +15,9 @@
     "test-api": "jest --watchAll --runInBand integration.test.ts",
     "start": "nodemon index.ts"
   },
+  "engines": {
+    "node": "v14.19.0"
+  },
   "author": "Wojciech Szmelczerczyk <szmelczerczykwojciech@gmail.com>",
   "license": "ISC",
   "dependencies": {

@@ -8,10 +8,10 @@ datasource db {
 }
 
 model Character {
-  id        Int @id @default(autoincrement())
-  name      String 
-  listId  Int
-  filmList FilmList @relation(fields: [listId], references: [id])
+  id       Int      @id @default(autoincrement())
+  name     String
+  listId   Int
+  FilmList FilmList @relation(fields: [listId], references: [id])
 }
 
 model Film {
@@ -19,15 +19,14 @@ model Film {
   title        String
   release_date String
   listId       Int
-  filmList     FilmList @relation(fields: [listId], references: [id])
+  FilmList     FilmList @relation(fields: [listId], references: [id])
 
   @@unique([listId, title], map: "filmTitle")
 }
 
 model FilmList {
-  id    Int    @id @default(autoincrement())
-  name  String @unique
-  films Film[]
-  characters Character[] 
-
+  id        Int         @id @default(autoincrement())
+  name      String      @unique
+  Character Character[]
+  Film      Film[]
 }
