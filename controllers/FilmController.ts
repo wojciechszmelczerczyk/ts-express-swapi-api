@@ -174,10 +174,10 @@ export const getListById = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     const listById = await getListByIdService(id);
-
+    console.log(listById);
     res.json(listById);
   } catch (err) {
-    return res.json({
+    return res.status(400).json({
       fail: true,
       err: err.message,
     });

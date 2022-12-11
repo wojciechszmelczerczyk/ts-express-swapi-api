@@ -132,26 +132,19 @@ export const getListByIdService = async (id: queryType) => {
   if (!parseInt(id as string))
     throw new Error("Provided id has to be a number.");
 
-  try {
-    const list = await prisma.filmList.findUnique({
-      where: {
-        id: parseInt(id as string),
-      },
-      include: {
-        films: true,
-        characters: true,
-      },
-    });
+  const list = await prisma.filmList.findUnique({
+    where: {
+      id: parseInt(id as string),
+    },
+    include: {
+      films: true,
+      characters: true,
+    },
+  });
 
-    if (list === null) throw new Error("List with provided id not found");
+  if (list === null) throw new Error("List with provided id not found");
 
-    return list;
-  } catch (err) {
-    return {
-      fail: true,
-      err: err.message,
-    };
-  }
+  return list;
 };
 
 export const exportSpecificListToExcelService = async (id: queryType) => {
