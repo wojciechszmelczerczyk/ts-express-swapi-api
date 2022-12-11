@@ -1,8 +1,8 @@
-# Get products
+# Get favorite film lists
 
 ## Description
 
-Get all favorite films lists.
+Get all favorite film lists.
 
 <b>URL :</b> `/favorites`
 

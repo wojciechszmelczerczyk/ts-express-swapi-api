@@ -1,4 +1,4 @@
-# Get products
+# Get films
 
 ## Description
 
