@@ -9,6 +9,7 @@ Simple movies middleware.
 - [Techstack](#techstack)
 - [Prerequisities](#prerequisities)
 - [To run](#to-run)
+- [App architecture](#app-architecture)
 - [Database architecture](#database-architecture)
 - [Env setup](#env-setup)
 - [Postman](#postman)
@@ -65,15 +66,32 @@ npx prisma db push
 npm run start
 ```
 
+## App architecture
+
+Application implements REST style architecture. Client communicate with server.
+
+<details>
+<summary>
+Server communicate with database and third party API i.e Star Wars API.
+</summary>
+
+<img src="./.github/img/arch.png">
+</details>
+
 ## Database architecture
 
+<details>
+<summary>
 Film list has an id, name, film array and distinct characters array.
+</summary>
 
 [![](https://mermaid.ink/img/pako:eNqFz7EOgjAQgOFXaW4mPEA3ghhJcAHGLhd6SqNtTWkHQ_vuVoOGzZv-5L7hboXJSgIO5A4Krw61MOw3x7Y7sxTLMsZPd-0wMs5mXPaqPlV9VY9N_5_umzEoQJPTqGQ-YH3vBPiZNAngOSW6mwBhUnbhIdFTI5W3DvgF7wsVgMHb4Wkm4N4F-qLtj02lF4UxQjk)](https://mermaid.live/edit#pako:eNqFz7EOgjAQgOFXaW4mPEA3ghhJcAHGLhd6SqNtTWkHQ_vuVoOGzZv-5L7hboXJSgIO5A4Krw61MOw3x7Y7sxTLMsZPd-0wMs5mXPaqPlV9VY9N_5_umzEoQJPTqGQ-YH3vBPiZNAngOSW6mwBhUnbhIdFTI5W3DvgF7wsVgMHb4Wkm4N4F-qLtj02lF4UxQjk)
 
+</details>
+
 ## Env setup
 
-### Create `.env` in project root directory
+Create `.env` in project root directory
 
 ```
 DB_URL=your-postgres-url
@@ -99,7 +117,6 @@ Import this file [postman collection](/imoli.postman_collection.json) in Postman
 |   GET    |       [`/favorites`](./docs/getFavorites.md)       |
 |   GET    |   [`/favorites/:id`](./docs/getFavoriteById.md)    |
 |   GET    | [`/favorites/:id/file`](./docs/getFileFavorite.md) |
-
 
 ## Tests
 
